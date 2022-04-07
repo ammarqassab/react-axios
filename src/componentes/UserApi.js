@@ -14,3 +14,8 @@ export const updateuser = (id, values) => {
     const responsee = axios.put('https://jsonplaceholder.typicode.com/users/'+id, values);
     return responsee;
 };
+
+export const adduser = (values) => { 
+    const responsee = axios.post('https://jsonplaceholder.typicode.com/users/',values);
+    return responsee;
+};

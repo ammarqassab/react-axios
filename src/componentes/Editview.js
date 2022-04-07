@@ -1,24 +1,24 @@
 import React from "react";
 
 export default function Editview(props) {
-    const value = props.value;
+    const valueuser = props.valueuser;
     return (
         <div>
-            <h3>edit user</h3>
+            <h3>Edit user</h3>
             <form onSubmit={props.edituserSubmit}>
                 <label>
                     Name : 
                 </label>
                 <br/>
-                <input type="text" value={value.name} onChange={props.handleChange} />
+                <input type="text" value={valueuser.name === null ? "":valueuser.name} onChange={props.handleChange} />
                 <br/>
                 <label>
                     Email : 
                 </label>
                 <br/>
-                <input type="email" value={value.email} onChange={props.handleChange} />
+                <input type="email" value={valueuser.email === null ? "":valueuser.email} onChange={props.handleChange} />
                 <br/>
-                <input type="submit" value="Submit" />
+                <input type="submit" value="Edit" />
             </form>
         </div>
     ) ;

@@ -1,6 +1,7 @@
 import React from "react";
+import Adduser from "./Adduser";
 import Editview from "./Editview";
-import {getuser,deleteuser,updateuser} from "./UserApi";
+import {getuser, deleteuser, updateuser, adduser} from "./UserApi";
 import Userview from "./Userview";
 
 export default class App extends React.Component {
@@ -8,7 +9,12 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       users:[],
-      user:{}
+      user:{},
+      adduser:{
+        id:null,name:null,username:null,email:null,phone:null,website:null,
+        address:{city:null,street:null,suite:null,zipcode:null,geo:{lat:null,lng:null}},
+        company:{name:null,catchPhrase:null,bs:null}
+      }
     };
   }
   //get user
@@ -76,7 +82,48 @@ export default class App extends React.Component {
 
     event.preventDefault();
   }
+  
+  //Add user
+  adduserSubmit = (event) => {
 
+    let id = this.state.users.length;
+      this.setState({adduser:{
+        ...this.state.adduser,
+        id:id
+      }
+      });
+
+    adduser(this.state.adduser)
+    .then( (responsee) => {
+      let newusers = this.state.users;
+      newusers.push(responsee.data);
+      console.log(this.state.users);
+      this.setState({
+        users:newusers
+      });
+    })
+    .catch( () => alert("حدث خطأ في الأضافة"));
+
+    event.preventDefault();
+  }
+  //Change state adduser
+  handleaddChange = (event) => {
+    if(event.target.type === 'email') {
+      this.setState({adduser:{
+        ...this.state.adduser,
+        email: event.target.value
+      }
+      });
+    }
+    if(event.target.type === 'text') {
+      this.setState({adduser:{
+        ...this.state.adduser,
+        name: event.target.value
+      }
+      });
+    }
+
+  }
 
   render() {
     return (
@@ -93,7 +140,9 @@ export default class App extends React.Component {
         
         <Userview value={this.state.user}/>
 
-        <Editview value={this.state.user} handleChange={this.handleChange} edituserSubmit={this.edituserSubmit} />
+        <Editview valueuser={this.state.user} handleChange={this.handleChange} edituserSubmit={this.edituserSubmit} />
+
+        <Adduser valueuser={this.state.adduser} handleaddChange={this.handleaddChange} adduserSubmit={this.adduserSubmit} />
 
       </div>
     );

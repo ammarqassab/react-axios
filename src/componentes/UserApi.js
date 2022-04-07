@@ -9,3 +9,8 @@ export const deleteuser = (id) => {
     const responsee = axios.delete('https://jsonplaceholder.typicode.com/users/'+id);
     return responsee;
 };
+
+export const updateuser = (id, values) => { 
+    const responsee = axios.put('https://jsonplaceholder.typicode.com/users/'+id, values);
+    return responsee;
+};

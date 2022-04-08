@@ -1,9 +1,14 @@
 import React from "react";
+import "./App.css";
 import Adduser from "./Adduser";
-import Editview from "./Editview";
+import Edituser from "./Edituser";
 import {getuser, deleteuser, updateuser, adduser} from "./UserApi";
 import Userview from "./Userview";
+import { Routes, Route, NavLink} from "react-router-dom";
+import Notfound from "./Notfound";
 
+
+export const MyNavLink = (props) =><NavLink className="navlink" style={({ isActive }) => {return {backgroundColor: isActive ? "red" : ""};}} {...props}>{props.children}</NavLink>;
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -85,13 +90,12 @@ export default class App extends React.Component {
   
   //Add user
   adduserSubmit = (event) => {
-
-    let id = this.state.users.length;
-      this.setState({adduser:{
-        ...this.state.adduser,
-        id:id
-      }
-      });
+      // let id = this.state.users.length;
+      // this.setState({adduser:{
+      //   ...this.state.adduser,
+      //   id:id
+      // }
+      // });
 
     adduser(this.state.adduser)
     .then( (responsee) => {
@@ -122,28 +126,40 @@ export default class App extends React.Component {
       }
       });
     }
-
+    
   }
 
   render() {
     return (
       <div>
+        <nav>
+          <MyNavLink to={"/"}> Home </MyNavLink>
+          <MyNavLink to={"/Userview"}>User view</MyNavLink>
+          <MyNavLink to={"/Edituser"}>Edit user</MyNavLink>
+          <MyNavLink to={"/Adduser"}>Add user</MyNavLink>
+        </nav>
         <ul>
           {this.state.users.map(user =>
           <li key={user.id}>
             {user.name} {" "}
-          <button onClick={() => this.setview(user)}>view</button> {" "}
-          <button onClick={() => this.deleteuser(user)}>delete user</button>
+          <MyNavLink to={`Userview/${user.id}`} onClick={() => this.setview(user)}>view</MyNavLink>
+          <MyNavLink to={`Edituser/${user.id}`} onClick={() => this.setview(user)}>edit user</MyNavLink>
+          <button onClick={() => this.deleteuser(user)}> delete user </button>
           </li>
           )}
         </ul>
         
-        <Userview value={this.state.user}/>
-
-        <Editview valueuser={this.state.user} handleChange={this.handleChange} edituserSubmit={this.edituserSubmit} />
-
-        <Adduser valueuser={this.state.adduser} handleaddChange={this.handleaddChange} adduserSubmit={this.adduserSubmit} />
-
+        <Routes>
+          <Route index element={""}/>
+          <Route path="/">
+            <Route path="Userview" element={<Userview value={this.state.user}/>}/>
+            <Route path="Userview/:id" element={<Userview value={this.state.user}/>}/>
+            <Route path="Edituser" element={<Edituser valueuser={this.state.user} handleChange={this.handleChange} edituserSubmit={this.edituserSubmit} />}/>
+            <Route path="Edituser/:id" element={<Edituser valueuser={this.state.user} handleChange={this.handleChange} edituserSubmit={this.edituserSubmit} />}/>
+            <Route path="Adduser" element={<Adduser valueuser={this.state.adduser} handleaddChange={this.handleaddChange} adduserSubmit={this.adduserSubmit} />}/>
+          </Route>
+          <Route path="*" element={<Notfound />}/>
+        </Routes>
       </div>
     );
   }
